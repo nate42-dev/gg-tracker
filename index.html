@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>GG Tracker</title>
+  <meta name="theme-color" content="#141216" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GG Tracker" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <link rel="icon" href="icon-180.png" />
+  <style>
+    html, body { margin: 0; padding: 0; background: #141216; }
+    body { padding-top: env(safe-area-inset-top); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // Storage adapter: same async API the app expects (window.storage),
+    // backed by localStorage on THIS device. App updates can never touch it.
+    (function () {
+      const P = "gg:";
+      window.storage = {
+        async get(key) {
+          const v = localStorage.getItem(P + key);
+          return v == null ? null : { key, value: v };
+        },
+        async set(key, value) { localStorage.setItem(P + key, value); return { key, value }; },
+        async delete(key) { localStorage.removeItem(P + key); return { key, deleted: true }; },
+        async list(prefix) {
+          const keys = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith(P + (prefix || ""))) keys.push(k.slice(P.length));
+          }
+          return { keys };
+        },
+      };
+    })();
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
