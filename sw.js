@@ -1,5 +1,5 @@
 // Bump VERSION on each deploy; old caches are purged, data (localStorage) is never touched.
-const VERSION = "gg-v1";
+const VERSION = "gg-v2";
 const SHELL = ["./", "./index.html", "./app.js", "./manifest.webmanifest", "./icon-180.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
